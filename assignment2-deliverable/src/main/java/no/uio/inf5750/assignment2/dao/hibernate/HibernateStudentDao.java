@@ -32,7 +32,6 @@ public class HibernateStudentDao
 
 	@Override
 	public Collection<Student> getAllStudents() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -2,100 +2,113 @@ package no.uio.inf5750.assignment2.service.impl;
 
 import java.util.Collection;
 
-import no.uio.inf5750.assignment2.model.Course;
+import no.uio.inf5750.assignment2.dao.hibernate.HibernateCourseDao;
+import no.uio.inf5750.assignment2.dao.hibernate.HibernateStudentDao;
 import no.uio.inf5750.assignment2.model.Student;
+import no.uio.inf5750.assignment2.model.Course;
 import no.uio.inf5750.assignment2.service.StudentSystem;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Set;
 
 public class DefaultStudentSystem 
 	implements StudentSystem{
+	
+	@Autowired
+	private HibernateCourseDao courseDao;
+	
+	@Autowired 
+	private HibernateStudentDao studentDao;
 
 	@Override
 	public int addCourse(String courseCode, String name) {
-		// TODO Auto-generated method stub
-		return 0;
+		Course course = new Course(courseCode, name);
+		courseDao.saveCourse(course);
+		return course.getId();
 	}
 
 	@Override
 	public void updateCourse(int courseId, String courseCode, String name) {
-		// TODO Auto-generated method stub
-		
+		Course course = courseDao.getCourse(courseId);
+		course.setCourseCode(courseCode);
+		course.setName(name);
+		courseDao.saveCourse(course);		
 	}
 
 	@Override
 	public Course getCourse(int courseId) {
-		// TODO Auto-generated method stub
-		return null;
+		return courseDao.getCourse(courseId);
 	}
 
 	@Override
 	public Course getCourseByCourseCode(String courseCode) {
-		// TODO Auto-generated method stub
-		return null;
+		return courseDao.getCourseByCourseCode(courseCode);
 	}
 
 	@Override
 	public Course getCourseByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return courseDao.getCourseByName(name);
 	}
 
 	@Override
 	public Collection<Course> getAllCourses() {
-		// TODO Auto-generated method stub
-		return null;
+		return courseDao.getAllCourses();
 	}
 
 	@Override
 	public void delCourse(int courseId) {
-		// TODO Auto-generated method stub
+		courseDao.delCourse(courseDao.getCourse(courseId));
 		
 	}
 
 	@Override
 	public void addAttendantToCourse(int courseId, int studentId) {
-		// TODO Auto-generated method stub
-		
+		Course course = courseDao.getCourse(courseId); 
+		Set<Student> attendants = course.getAttendants();
+		attendants.add(studentDao.getStudent(studentId));
+		course.setAttendants(attendants);
 	}
 
 	@Override
 	public void removeAttendantFromCourse(int courseId, int studentId) {
-		// TODO Auto-generated method stub
+		Course course = courseDao.getCourse(courseId);
+		Set<Student> attendants = course.getAttendants();
+		attendants.remove(studentDao.getStudent(studentId));
+		course.setAttendants(attendants);
 		
 	}
 
 	@Override
 	public int addStudent(String name) {
-		// TODO Auto-generated method stub
-		return 0;
+		Student student = new Student(name);
+		studentDao.saveStudent(student);
+		return student.getId();
 	}
 
 	@Override
 	public void updateStudent(int studentId, String name) {
-		// TODO Auto-generated method stub
-		
+		Student student = studentDao.getStudent(studentId);
+		student.setName(name);
+		studentDao.saveStudent(student);
 	}
 
 	@Override
 	public Student getStudent(int studentId) {
-		// TODO Auto-generated method stub
-		return null;
+		return studentDao.getStudent(studentId);
 	}
 
 	@Override
 	public Student getStudentByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return studentDao.getStudentByName(name);
 	}
 
 	@Override
 	public Collection<Student> getAllStudents() {
-		// TODO Auto-generated method stub
-		return null;
+		return studentDao.getAllStudents();
 	}
 
 	@Override
 	public void delStudent(int studentId) {
-		// TODO Auto-generated method stub
+		studentDao.delStudent(studentDao.getStudent(studentId));
 		
 	}
 
