@@ -2,13 +2,18 @@ package no.uio.inf5750.assignment2.dao.hibernate;
 
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import no.uio.inf5750.assignment2.dao.CourseDAO;
 import no.uio.inf5750.assignment2.model.Course;
 
+@Transactional
 public class HibernateCourseDao 
 	implements CourseDAO{
+	
+	static Logger logger = Logger.getLogger(HibernateCourseDao.class);
 	private SessionFactory sessionFactory;
 
     public void setSessionFactory( SessionFactory sessionFactory )

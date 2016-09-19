@@ -2,28 +2,30 @@ package no.uio.inf5750.assignment2.service.impl;
 
 import java.util.Collection;
 
-import no.uio.inf5750.assignment2.dao.hibernate.HibernateCourseDao;
-import no.uio.inf5750.assignment2.dao.hibernate.HibernateStudentDao;
+import no.uio.inf5750.assignment2.dao.CourseDAO;
+import no.uio.inf5750.assignment2.dao.StudentDAO;
 import no.uio.inf5750.assignment2.model.Student;
 import no.uio.inf5750.assignment2.model.Course;
 import no.uio.inf5750.assignment2.service.StudentSystem;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Set;
 
 public class DefaultStudentSystem 
 	implements StudentSystem{
 	
+	static Logger logger = Logger.getLogger(DefaultStudentSystem.class);
 	@Autowired
-	private HibernateCourseDao courseDao;
+	private CourseDAO courseDao;
 	
 	@Autowired 
-	private HibernateStudentDao studentDao;
+	private StudentDAO studentDao;
 
 	@Override
 	public int addCourse(String courseCode, String name) {
 		Course course = new Course(courseCode, name);
-		courseDao.saveCourse(course);
-		return course.getId();
+		return courseDao.saveCourse(course);
 	}
 
 	@Override
@@ -74,7 +76,6 @@ public class DefaultStudentSystem
 		Set<Student> attendants = course.getAttendants();
 		attendants.remove(studentDao.getStudent(studentId));
 		course.setAttendants(attendants);
-		
 	}
 
 	@Override
