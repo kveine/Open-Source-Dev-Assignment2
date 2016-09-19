@@ -1,8 +1,11 @@
 package no.uio.inf5750.assignment2.dao.hibernate;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +18,7 @@ public class HibernateCourseDao
 	
 	static Logger logger = Logger.getLogger(HibernateCourseDao.class);
 	private SessionFactory sessionFactory;
-
+	
     public void setSessionFactory( SessionFactory sessionFactory )
     {
         this.sessionFactory = sessionFactory;
@@ -43,8 +46,9 @@ public class HibernateCourseDao
 
 	@Override
 	public Collection<Course> getAllCourses() {
-		// TODO Auto-generated method stub
-		return null;
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Course.class);
+		List<Course> courses = criteria.list();
+		return courses;
 	}
 
 	@Override

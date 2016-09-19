@@ -10,8 +10,6 @@ import no.uio.inf5750.assignment2.service.StudentSystem;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Set;
-
 public class DefaultStudentSystem 
 	implements StudentSystem{
 	
@@ -65,24 +63,25 @@ public class DefaultStudentSystem
 	@Override
 	public void addAttendantToCourse(int courseId, int studentId) {
 		Course course = courseDao.getCourse(courseId); 
-		Set<Student> attendants = course.getAttendants();
-		attendants.add(studentDao.getStudent(studentId));
-		course.setAttendants(attendants);
+		Student student = studentDao.getStudent(studentId);
+		course.getAttendants().add(student);
+		student.getCourses().add(course);
+		studentDao.saveStudent(student);
 	}
 
 	@Override
 	public void removeAttendantFromCourse(int courseId, int studentId) {
-		Course course = courseDao.getCourse(courseId);
-		Set<Student> attendants = course.getAttendants();
-		attendants.remove(studentDao.getStudent(studentId));
-		course.setAttendants(attendants);
+		Course course = courseDao.getCourse(courseId); 
+		Student student = studentDao.getStudent(studentId);
+		course.getAttendants().remove(student);
+		student.getCourses().remove(course);
+		studentDao.saveStudent(student);
 	}
 
 	@Override
 	public int addStudent(String name) {
 		Student student = new Student(name);
-		studentDao.saveStudent(student);
-		return student.getId();
+		return studentDao.saveStudent(student);
 	}
 
 	@Override

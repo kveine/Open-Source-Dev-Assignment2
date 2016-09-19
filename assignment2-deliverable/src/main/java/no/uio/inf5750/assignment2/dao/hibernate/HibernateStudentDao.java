@@ -1,8 +1,11 @@
 package no.uio.inf5750.assignment2.dao.hibernate;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +41,10 @@ public class HibernateStudentDao
 
 	@Override
 	public Collection<Student> getAllStudents() {
-		return null;
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Student.class);
+		List<Student> students = criteria.list();
+		return students;
+		
 	}
 
 	@Override
