@@ -3,6 +3,8 @@ package no.uio.inf5750.assignment2.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author Torgeir Lorange Ostby
  * @version $Id: Student.java 29 2007-08-23 19:39:08Z torgeilo $
@@ -15,9 +17,13 @@ public class Student {
 	 * Required and unique.
 	 */
 	private String name;
-
+	
+	@JsonIgnore
 	private Set<Course> courses = new HashSet<Course>();
-
+	
+	private String longitude;
+	
+	private String latitude;
 
 	// -------------------------------------------------------------------------
 	// Constructors
@@ -74,7 +80,7 @@ public class Student {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public Set<Course> getCourses() {
 		// courses = new HashSet<Course>( courses ); // Rehash hack
 
@@ -83,5 +89,21 @@ public class Student {
 
 	public void setCourses(Set<Course> courses) {
 		this.courses = courses;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 }

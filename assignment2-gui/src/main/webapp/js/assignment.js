@@ -8,6 +8,7 @@ function getStudentData() {
 }
 
 function populateStudentTable(json) {
+	
 	// for each student make a row in the student location table
 	// and show the name, all courses and location.
 	// if there is no location print "No location" in the <td> instead

@@ -112,4 +112,14 @@ public class DefaultStudentSystem
 		
 	}
 
+	@Override
+	public void setStudentLocation(int studentId, String latitude, String longitude) {
+		Student student =studentDao.getStudent(studentId);
+		student.setLatitude(latitude);
+		student.setLongitude(longitude);
+		studentDao.saveStudent(student);
+		
+		
+	}
+
 }
