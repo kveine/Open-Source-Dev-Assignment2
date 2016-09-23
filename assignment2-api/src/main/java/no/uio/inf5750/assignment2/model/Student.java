@@ -18,7 +18,7 @@ public class Student {
 	 */
 	private String name;
 	
-	@JsonIgnore
+	
 	private Set<Course> courses = new HashSet<Course>();
 	
 	private String longitude;

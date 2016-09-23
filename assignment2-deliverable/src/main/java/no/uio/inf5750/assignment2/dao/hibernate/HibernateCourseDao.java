@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import no.uio.inf5750.assignment2.dao.CourseDAO;
@@ -17,6 +18,7 @@ public class HibernateCourseDao
 	implements CourseDAO{
 	
 	static Logger logger = Logger.getLogger(HibernateCourseDao.class);
+	@Autowired
 	private SessionFactory sessionFactory;
 	
     public void setSessionFactory( SessionFactory sessionFactory )

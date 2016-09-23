@@ -1,6 +1,8 @@
 package no.uio.inf5750.assignment2.service.impl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import no.uio.inf5750.assignment2.dao.CourseDAO;
 import no.uio.inf5750.assignment2.dao.StudentDAO;
@@ -108,6 +110,11 @@ public class DefaultStudentSystem
 
 	@Override
 	public void delStudent(int studentId) {
+		Student student = studentDao.getStudent(studentId);
+		Set<Course> courses = student.getCourses();
+		for(int i = 0; i < courses.size(); i++){
+			removeAttendantFromCourse(courses.iterator().next().getId(), student.getId());
+		}
 		studentDao.delStudent(studentDao.getStudent(studentId));
 		
 	}

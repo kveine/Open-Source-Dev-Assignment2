@@ -1,22 +1,39 @@
 function getStudentData() {
-	// This must be implemented by you. The json variable should be fetched
-	// from the server, not initiated with a static value as below. 
-	// You must first download the student json data from the server
-	// then call populateStudentTable(json);
-	// and then populateStudentLocationForm(json);
-
+	$.getJSON("/api/student.json", function (response ) {
+	console.log(response)
+	populateStudentTable(response);
+	populateStudentLocationForm(response);
+	});
 }
 
 function populateStudentTable(json) {
-	
-	// for each student make a row in the student location table
-	// and show the name, all courses and location.
-	// if there is no location print "No location" in the <td> instead
-	// tip: see populateStudentLocationForm(json) og google how to insert html from js with jquery. 
-	// Also search how to make rows and columns in a table with html
-
-	// the table can you see in index.jsp with id="studentTable"
-	
+	var formString ='<tr>';
+	for (var s = 0; s < json.length; s++){
+		var student = json[s];
+		student = explodeJSON(student);
+		formString += '<td>' + student.name+ '</td><td>';
+			for (var c = 0; c < student.courses.length; c++){
+				var course = student.courses[c];
+				course = explodeJSON(course);
+				
+				formString +=  course.courseCode + ', ' ;
+			}
+			formString += '</td>';
+			if(student.longitude != null && student.latitude != null){
+				formString += '<td>' + student.longitude + ', ' + student.latitude + '</td></tr>'
+			} else{
+				formString += '<td> No location </td></tr>';
+			}
+		//formString += '<td>' + student.name+ '</td>' + '<td>' + student.courses + '</td> <td>' + student.longitude + ', ' + student.latitude + '</td></tr>';
+		//formString += '</td><td>' + student.longitude + ', ' + student.latitude + '</td></tr>';
+			/*if(student.Location != null){
+			formString += '<td>' + student.name+ '</td>' + '<td>' + student.courses + '</td> <td>' + student.longitude + ', ' + student.latitude + '</td></tr>';
+		} else {
+			formString += '<td>' + student.name+ '</td>' + '<td>' + student.courses + '</td> <td> No location </td></tr>';
+		}*/
+	}
+	formString += '</tr>';
+	$('#studentTable').append(formString);
 }
 
 function populateStudentLocationForm(json) {
@@ -40,14 +57,20 @@ $('#locationbtn').on('click', function(e) {
 
 // This function gets called when you press the Set Location button
 function get_location() {
+	navigator.geolocation.getCurrentPosition(location_found);
 }
 
 // Call this function when you've succesfully obtained the location. 
 function location_found(position) {
-	// Extract latitude and longitude and save on the server using an AJAX call. 
-	// When you've updated the location, call populateStudentTable(json); again
-	// to put the new location next to the student on the page. .
+	var selector = document.getElementById('selectedStudent');
+	var student = selector[selector.selectedIndex].value;
+	var long = position.coords.longitude;
+	var lat = position.coords.latitude;
+	$.getJSON("/api/student/" + student + "/location?longitude=" + long + "&latitude=" + lat, function(response){ 
 
+		populateStudentTable(response);
+
+	});
 }
 
 var objectStorage = new Object();
@@ -63,4 +86,26 @@ function explodeJSON(object) {
 	}
 	console.log(object);
 	return object;
+}
+
+var map;
+function initialize_map() {
+       var mapOptions = {
+               zoom : 10,
+               mapTypeId : google.maps.MapTypeId.ROADMAP
+       };
+       map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+       // Try HTML5 geolocation
+       if (navigator.geolocation) {
+               navigator.geolocation.getCurrentPosition(function(position) {
+                       var pos = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);
+                       map.setCenter(pos);
+               }, function() {
+                       handleNoGeolocation(true);
+               });
+       } else {
+               // Browser doesn't support Geolocation
+               // Should really tell the user…
+       }
 }

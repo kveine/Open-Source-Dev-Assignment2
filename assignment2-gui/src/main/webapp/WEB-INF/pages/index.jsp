@@ -106,10 +106,13 @@ html,body {
 	<script>
 	$(document).ready(function() {
 		getStudentData();
+		 initialize_map();
 	});
 	</script>
 
 <div id="map-canvas" class="container map"></div>
+<script src="https://maps.googleapis.com/maps/api/js"></script>
 
 </body>
 </html>
+

@@ -25,19 +25,18 @@ public class ApiController {
 	
 	@RequestMapping(value = "api/student", method = RequestMethod.GET)
 	@ResponseBody
-	public Collection<Student> listStudents(HttpServletRequest request, HttpServletResponse response) { 
+	public Collection<Student> listStudents() { 
 		return studentSystem.getAllStudents();
 	}
 	
 	@RequestMapping(value = "api/student/{student}/location", method = RequestMethod.GET)
 	@ResponseBody
-	public Collection<Student> setLocation(@PathVariable String student, @RequestParam("longitude") String longitude, 
+	public Collection<Student> setLocation(@PathVariable Integer student, @RequestParam("longitude") String longitude, 
 								@RequestParam("latitude") String latitude, HttpServletRequest request,
 								HttpServletResponse response) {
-		Student s = studentSystem.getStudentByName(student);
-		s.setLatitude(latitude);
+		Student s = studentSystem.getStudent(student);
 		s.setLongitude(longitude);
-		
+		s.setLatitude(latitude);
 		return studentSystem.getAllStudents();
 	}
 	
