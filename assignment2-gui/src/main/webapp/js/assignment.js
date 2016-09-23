@@ -58,6 +58,7 @@ $('#locationbtn').on('click', function(e) {
 // This function gets called when you press the Set Location button
 function get_location() {
 	navigator.geolocation.getCurrentPosition(location_found);
+	
 }
 
 // Call this function when you've succesfully obtained the location. 
@@ -67,10 +68,10 @@ function location_found(position) {
 	var long = position.coords.longitude;
 	var lat = position.coords.latitude;
 	$.getJSON("/api/student/" + student + "/location?longitude=" + long + "&latitude=" + lat, function(response){ 
-
 		populateStudentTable(response);
 
 	});
+	location.reload();
 }
 
 var objectStorage = new Object();

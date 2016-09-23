@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,15 @@ import no.uio.inf5750.assignment2.model.Student;
 @ContextConfiguration(locations={"classpath*:/META-INF/assignment2/beans.xml"})
 @Transactional
 public class StudentSystemTest {
-	
+	/*
+	 * 
+	 * Noen av testene får error og noen får failure,
+	 * jeg har kommentert mer rundt de forskjellige testene som ikke fungerer i metodene.
+	 * Jeg håper jeg får muligheten til å rette på dette etter hjelp og tilbakemeldinger av dere, 
+	 * og levere på nytt så jeg kan få betsått :)
+	 * 
+	 * 
+	 */
 	@Autowired
 	private StudentSystem studentSystem;
 
@@ -57,6 +66,14 @@ public class StudentSystemTest {
 
 	@Test
 	public void getCourseByCourseCodeTest() {
+		/*
+		 * Her får jeg error i test:
+		 * getCourseByCourseCodeTest(no.uio.inf5750.assignment2.service.StudentSystemTest): 
+		 * Provided id of the wrong type for class no.uio.inf5750.assignment2.model.Course. 
+		 * Expected: class java.lang.Integer, got class java.lang.String
+		 * Forstår ikke feilmeldingen da jeg mener at begge variablene er integer
+		 * 
+		 */
 		int courseId = studentSystem.addCourse("INF1234","test");
 		Course course = studentSystem.getCourseByCourseCode("INF1234");
 		assertEquals(courseId, course.getId());
@@ -64,6 +81,13 @@ public class StudentSystemTest {
 
 	@Test
 	public void getCourseByNameTest() {
+		/* 
+		 * Her får jeg error i test:
+		 * Provided id of the wrong type for class no.uio.inf5750.assignment2.model.Course. 
+		 * Expected: class java.lang.Integer, got class java.lang.String
+		 * Forstår ikke feilmeldingen da jeg mener at begge variablene er integer
+		 * 
+		 * */
 		int courseId = studentSystem.addCourse("INF1234","test");
 		Course course = studentSystem.getCourseByName("test");
 		assertEquals(courseId, course.getId());
@@ -114,39 +138,33 @@ public class StudentSystemTest {
 
 	@Test
 	public void addAttendantToCourseTest() {
-		int courseId = studentSystem.addCourse("INF4820","test");
-		Course course = studentSystem.getCourse(courseId);
-	
+		/*
+		 * 
+		 * Her får jeg failure i test:
+		 * addAttendantToCourseTest(no.uio.inf5750.assignment2.service.StudentSystemTest): expected:<true> but was:<false
+		 * Jeg sliter litt med hvordan jeg skal teste på lista
+		 * 
+		 */
+		int courseId = studentSystem.addCourse("INF4490", "test");
 		int studentId = studentSystem.addStudent("Kristin");
+		studentSystem.addAttendantToCourse(courseId, studentId);
+		Course course = studentSystem.getCourse(courseId);
 		Student student = studentSystem.getStudent(studentId);
-	
-		course.getAttendants().add(student);
-		student.getCourses().add(course);
-	
-		hibernateStudentDao.saveStudent(student);
-	
+		
 		assertEquals(true, course.getAttendants().equals(student));
 		assertEquals(true, student.getCourses().equals(course));
 	}
 
 	@Test
 	public void removeAttendantFromCourseTest() {
+		int courseId = studentSystem.addCourse("INF4490", "test");
 		int studentId = studentSystem.addStudent("Kristin");
+		studentSystem.removeAttendantFromCourse(courseId, studentId);
+		Course course = studentSystem.getCourse(courseId);
 		Student student = studentSystem.getStudent(studentId);
 	
-		int courseId = studentSystem.addCourse("INF4820","test");
-		Course course = studentSystem.getCourse(courseId);
-	
-		course.getAttendants().remove(student);
-		student.getCourses().remove(course);
-		hibernateCourseDao.saveCourse(course);
-		hibernateStudentDao.saveStudent(student);
-	
-		Student student2 = studentSystem.getStudent(studentId);
-		Course course2 = studentSystem.getCourse(courseId);
-	
-		assertNotEquals(course.getAttendants(), course2.getAttendants());
-		assertEquals(student.getCourses(), student2.getCourses());
+		assertEquals(false, course.getAttendants().equals(student));
+		assertEquals(false, student.getCourses().equals(course));
 	}
 
 	@Test
@@ -175,6 +193,14 @@ public class StudentSystemTest {
 
 	@Test
 	public void getStudentByNameTest() {
+		/*
+		 * Her får jeg error i test:
+		 * getStudentByNameTest(no.uio.inf5750.assignment2.service.StudentSystemTest): 
+		 * Provided id of the wrong type for class no.uio.inf5750.assignment2.model.Student. 
+		 * Expected: class java.lang.Integer, got class java.lang.String
+		 * Forstår ikke feilmeldingen da jeg mener at begge variablene er int
+		 * 
+		 */
 		int studentId = studentSystem.addStudent("Kristin");
 		Student student = studentSystem.getStudentByName("Kristin");
 		assertEquals(studentId, student.getId());
